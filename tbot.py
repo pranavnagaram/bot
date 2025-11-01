@@ -182,12 +182,12 @@ async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     summary = correct_df.groupby("username")["round"].max().reset_index()
-    summary = summary.sort_values(by="round", ascending=False)
+    summary = summary.sort_values(by="round", ascending=False).head(10)  # 👈 show only top 10
 
-    msg = "🏆 *Leaderboard*\n\n"
-    for _, row in summary.iterrows():
-        uname = escape_markdown(row['username'])
-        msg += f"{uname}: Round {int(row['round'])}\n"
+    msg = "🏆 *Top 10 Leaderboard*\n\n"
+    for i, row in summary.iterrows():
+        msg += f"{i+1}. {row['username']}: Round {int(row['round'])}\n"
+
 
     await update.message.reply_text(msg, parse_mode="MarkdownV2")
 # ==========================
