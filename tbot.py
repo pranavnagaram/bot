@@ -26,6 +26,11 @@ BOT_TOKEN = "8267143715:AAF5Xbk6gf6k6qpWEJBVZAWsl8Mv6xXj-9Q"
 ADMIN_USERNAME = "Pr_nag"   # without @
 QUESTIONS_FILE = "questions.csv"
 RESULTS_FILE = "results.csv"
+# ==========================
+# LOAD REGISTERED TEAMS
+# ==========================
+teams_df = pd.read_csv("teams.csv")
+registered_leaders = teams_df["leader_username"].dropna().astype(str).tolist()
 
 # ==========================
 # LOAD QUESTIONS
@@ -59,17 +64,30 @@ def save_result(user, username, round_num, correct, time_taken, selfie_file_id=N
 # ==========================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
+    username = str(user.username)
+
+    # Check disqualification
     if user.id in disqualified:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="🚫 You’ve been disqualified earlier and cannot restart the quiz."
         )
-        
         return
+
+    # Check registration
+    if username not in registered_leaders:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="❗ You are not registered as a team leader. Only registered team leaders can start the quiz."
+        )
+        return
+
+    # Initialize user session
     teams[user.id] = {"round": 1, "start_time": datetime.datetime.now()}
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"👋 Welcome {user.first_name}!.\nGet ready for Round 1!"
+        text=f"👋 Welcome {user.first_name}!.\nGet ready for Round 1!",
+        parse_mode="Markdown"
     )
     await send_question(update, context)
 
