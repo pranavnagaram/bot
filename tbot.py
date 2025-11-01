@@ -69,7 +69,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     teams[user.id] = {"round": 1, "start_time": datetime.datetime.now()}
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"👋 Welcome {user.first_name}! You’re Team Leader.\nGet ready for Round 1!"
+        text=f"👋 Welcome {user.first_name}!.\nGet ready for Round 1!"
     )
     await send_question(update, context)
 
