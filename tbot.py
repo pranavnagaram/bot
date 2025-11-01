@@ -29,8 +29,8 @@ RESULTS_FILE = "results.csv"
 # ==========================
 # LOAD REGISTERED TEAMS
 # ==========================
-teams_df = pd.read_csv("teams.csv")
-registered_leaders = teams_df["leader_username"].dropna().astype(str).tolist()
+# teams_df = pd.read_csv("teams.csv")
+# registered_leaders = teams_df["leader_username"].dropna().astype(str).tolist()
 
 # ==========================
 # LOAD QUESTIONS
@@ -75,12 +75,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # Check registration
-    if username not in registered_leaders:
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text="❗ You are not registered as a team leader. Only registered team leaders can start the quiz."
-        )
-        return
+    # if username not in registered_leaders:
+    #     await context.bot.send_message(
+    #         chat_id=update.effective_chat.id,
+    #         text="❗ You are not registered as a team leader. Only registered team leaders can start the quiz."
+    #     )
+    #     return
 
     # Initialize user session
     teams[user.id] = {"round": 1, "start_time": datetime.datetime.now()}
